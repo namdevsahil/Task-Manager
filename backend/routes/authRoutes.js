@@ -8,6 +8,7 @@ router.post("/register", register);
 router.post("/login", login);
 
 
+
 // Example test router
 router.get("/test", (req, res) => {
     res.send("Auth route is working!");

@@ -1,61 +1,54 @@
-const mongoose = require("mongoose");
 const Task = require("../models/Task");
 
-// ✅ Create a Task
+// ✅ Create a Task - Only for Logged-in User
 exports.createTask = async (req, res) => {
   try {
     const { title, description, dueDate } = req.body;
 
-    console.log("🔍 Logged-in User ID (before saving):", req.user.id);
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized: User not found" });
+    }
 
     const task = new Task({
-      user: new mongoose.Types.ObjectId(req.user.id), // Ensure ObjectId
+      user: req.user.id, // ✅ Save task for this specific user
       title,
       description,
       dueDate,
     });
 
     await task.save();
-    console.log("✅ Task Created:", task);
     res.status(201).json({ message: "Task created successfully", task });
   } catch (error) {
-    console.error("❌ Task Creation Error:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
-
-// ✅ Get All Tasks
+// ✅ Get Tasks - Only Show Tasks for Logged-in User
+// ✅ Get Tasks with Optional Filtering by Status
 exports.getTasks = async (req, res) => {
   try {
-    console.log("🔍 Fetching tasks for User ID:", req.user.id);
+    const filter = { user: req.user.id };
 
-    // Ensure we query using ObjectId
-    const tasks = await Task.find({ user: new mongoose.Types.ObjectId(req.user.id) });
-
-    if (tasks.length === 0) {
-      console.log("❌ No tasks found for user:", req.user.id);
-      return res.status(404).json({ message: "No tasks found" });
+    if (req.query.status) {
+      filter.status = req.query.status; // Filter by status if provided
     }
 
-    console.log("✅ Tasks found:", tasks); // Log tasks
+    const tasks = await Task.find(filter);
     res.json(tasks);
   } catch (error) {
-    console.error("❌ Error Fetching Tasks:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
 
-
-// ✅ Update a Task
+// ✅ Update Task - Only if the Task Belongs to the User
 exports.updateTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task || task.user.toString() !== req.user.id) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(403).json({ message: "Not authorized to update this task" });
     }
-    
+
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
     task.status = req.body.status || task.status;
@@ -68,12 +61,12 @@ exports.updateTask = async (req, res) => {
   }
 };
 
-// ✅ Delete a Task
+// ✅ Delete Task - Only if the Task Belongs to the User
 exports.deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task || task.user.toString() !== req.user.id) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(403).json({ message: "Not authorized to delete this task" });
     }
 
     await task.deleteOne();
