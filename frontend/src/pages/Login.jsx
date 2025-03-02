@@ -25,25 +25,32 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2 className="backgroung-black">Login</h2>
       {error && <p>{error}</p>}
       <form onSubmit={handleLogin}>
         <input
           type="email"
-          placeholder="Enter Email"
+          placeholder="Enter email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-        />
-        <input
+        />  
+        <br />
+         <input
           type="password"
           placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
+        <br />
         <button type="submit">Login</button>
+        <a href="/register" className="text-indigo-600 font-semibold hover:underline">
+            Register
+          </a>
       </form>
+
     </div>
   );
 };
