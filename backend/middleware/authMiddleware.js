@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
 
     req.user = user; // ✅ Attach user data to request object
     console.log("🔑 Authenticated User:", req.user.email); // Debugging
-
+    
     next();
   } catch (error) {
     console.error("❌ Token validation failed:", error.message);

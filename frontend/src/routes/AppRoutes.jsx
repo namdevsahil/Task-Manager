@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
 import Dashboard from "../pages/Dashboard.jsx";  // ✅ Ensure `.jsx` extension is added

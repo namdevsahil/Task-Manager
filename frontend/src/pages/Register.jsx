@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 import axios from "axios";
-
+import logo from "../assets/Logo.png"; // ✅ Correctly import logo
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -15,76 +16,98 @@ const Register = () => {
     setError(""); // Clear previous errors
 
     try {
-      await axios.post("http://localhost:5001/api/auth/register", { name, email, password });
+      const res = await axios.post("http://localhost:5001/api/auth/register", {
+        name,
+        email,
+        password,
+      });
 
-      navigate("/login"); // Redirect to login after successful registration
+      if (res.data.success) {
+        navigate("/login");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      setError(err.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600">
-      <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full transform transition duration-500 hover:scale-105">
-        <h2 className="text-3xl font-bold text-center text-gray-800">Create an Account</h2>
-        <p className="text-gray-500 text-center mt-2">Join us to manage your tasks efficiently!</p>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 px-4 py-10">
+      <div className="w-full max-w-md space-y-6 bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg mt-4">
+        <div className="text-center">
+          {/* ✅ Use imported logo */}
+          <img alt="S7" src={logo} className="mx-auto h-12 w-auto" />
+          <h2 className="mt-6 text-2xl font-bold text-gray-900 dark:text-white">
+            Create an account
+          </h2>
+        </div>
 
-        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-
-        <form className="mt-6 space-y-4" onSubmit={handleRegister}>
-          <div className="flex items-center space-x-3">
-            <label htmlFor="name" className="text-gray-700 font-medium w-32">Enter Your Full Name</label>
+        <form className="space-y-8" onSubmit={handleRegister}>
+          {/* ✅ Name Field */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              Full Name
+            </label>
             <input
               id="name"
+              name="name"
               type="text"
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 sm:text-sm"
             />
           </div>
 
-          <div className="flex items-center space-x-3">
-            <label htmlFor="email" className="text-gray-700 font-medium w-32">Enter Your Email Address</label>
+          {/* ✅ Email Field */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              Email address
+            </label>
             <input
               id="email"
+              name="email"
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 sm:text-sm"
             />
           </div>
 
-          <div className="flex items-center space-x-3">
-            <label htmlFor="password" className="text-gray-700 font-medium w-32">Enter Your Password</label>
+          {/* ✅ Password Field */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              Password
+            </label>
             <input
               id="password"
+              name="password"
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 sm:text-sm"
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
-          >
-            Sign Up
-          </button>
-        </form>
+          {/* ✅ Error Message */}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-        <p className="text-center text-gray-600 mt-4">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-600 font-semibold hover:underline">
-            Log in
-          </a>
-        </p>
+          {/* ✅ Submit Button */}
+          <div>
+            <button
+              type="submit"
+              className="w-full rounded-md bg-indigo-600 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+            >
+              Register
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

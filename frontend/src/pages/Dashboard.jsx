@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -126,10 +127,11 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  return (
+return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
-      {/* Notification Bar */}
-      {notification && (
+    {/* { Notification drawer } */}
+      
+    {notification && (
   <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-md text-white text-lg font-semibold shadow-lg ${
     notification.type === "error" ? "bg-red-600" : "bg-green-600"
   }`}>
@@ -180,7 +182,7 @@ const Dashboard = () => {
 
       {/* Filter Tasks */}
       <div className="w-full max-w-4xl mb-4">
-        <select className="p-2 border border-gray-300 rounded" onChange={(e) => setStatusFilter(e.target.value)}>
+        <select className="p-2 border border-gray-300 text-gray-800 rounded" onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="all">All Tasks</option>
           <option value="pending">Pending</option>
           <option value="completed">Completed</option>
